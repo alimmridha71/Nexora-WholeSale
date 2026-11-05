@@ -14,10 +14,10 @@
         <nav class="container-page flex h-16 items-center justify-between gap-4" aria-label="Main">
             <a href="{{ route('home') }}" class="flex items-center gap-2.5" aria-label="Nexora Wholesale home">
                 @include('partials.logo-mark')
-                <span class="text-lg font-bold tracking-tight text-ink-900">Nexora <span class="text-brand-600">Wholesale</span></span>
+                <span class="text-base font-bold tracking-tight whitespace-nowrap text-ink-900 sm:text-lg">Nexora <span class="text-brand-600">Wholesale</span></span>
             </a>
 
-            <div class="flex flex-wrap items-center justify-end gap-1">
+            <div class="flex items-center justify-end gap-1 overflow-x-auto">
                 <a href="{{ route('home') }}" class="nav-link hidden sm:inline-flex">Catalog</a>
                 <a href="{{ route('quote-status.create') }}" class="nav-link hidden sm:inline-flex">Quote status</a>
 
@@ -41,7 +41,7 @@
                     </form>
                 @else
                     <a href="{{ route('login') }}" class="nav-link">Log in</a>
-                    <a href="{{ route('register') }}" class="btn-primary ml-1">Open a trade account</a>
+                    <a href="{{ route('register') }}" class="btn-primary ml-1 hidden sm:inline-flex">Open a trade account</a>
                 @endauth
             </div>
         </nav>

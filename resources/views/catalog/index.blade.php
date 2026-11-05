@@ -36,15 +36,15 @@
                 <dl class="mt-12 grid max-w-lg grid-cols-3 gap-6 border-t border-white/10 pt-8">
                     <div>
                         <dt class="text-xs tracking-wide text-slate-400 uppercase">Products</dt>
-                        <dd class="mt-1 text-3xl font-bold">{{ number_format($stats['products']) }}</dd>
+                        <dd class="mt-1 text-2xl font-bold whitespace-nowrap sm:text-3xl">{{ number_format($stats['products']) }}</dd>
                     </div>
                     <div>
                         <dt class="text-xs tracking-wide text-slate-400 uppercase">Price tiers</dt>
-                        <dd class="mt-1 text-3xl font-bold">{{ number_format($stats['tiers']) }}</dd>
+                        <dd class="mt-1 text-2xl font-bold whitespace-nowrap sm:text-3xl">{{ number_format($stats['tiers']) }}</dd>
                     </div>
                     <div>
                         <dt class="text-xs tracking-wide text-slate-400 uppercase">Bulk savings</dt>
-                        <dd class="mt-1 text-3xl font-bold text-accent-300">up to {{ $stats['max_saving'] }}%</dd>
+                        <dd class="mt-1 text-2xl font-bold whitespace-nowrap sm:text-3xl text-accent-300">up to {{ $stats['max_saving'] }}%</dd>
                     </div>
                 </dl>
             </div>
