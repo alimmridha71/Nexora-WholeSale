@@ -50,6 +50,24 @@ class BulkPricingTest extends TestCase
         $this->assertSame('8.00', $product->getPriceForQuantity(250));
     }
 
+    public function test_max_bulk_saving_percent(): void
+    {
+        // base 10.00, best tier 7.00 => 30%
+        $this->assertSame(30, $this->productWithTiers()->load('bulkPrices')->maxBulkSavingPercent());
+        $this->assertSame(0, Product::factory()->create()->load('bulkPrices')->maxBulkSavingPercent());
+    }
+
+    public function test_home_page_shows_hero_stats_and_savings_badge(): void
+    {
+        $this->productWithTiers();
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Wholesale pricing that')
+            ->assertSee('Save up to 30%')
+            ->assertSee('up to 30%');
+    }
+
     public function test_deleting_a_product_cascades_to_its_tiers(): void
     {
         $product = $this->productWithTiers();

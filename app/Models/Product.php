@@ -115,6 +115,24 @@ class Product extends Model
         return $tier?->price_per_unit ?? $this->base_price;
     }
 
+    /**
+     * Largest discount (whole percent) a bulk tier gives versus base_price,
+     * or 0 without tiers. Uses the eager-loaded relation when available.
+     */
+    public function maxBulkSavingPercent(): int
+    {
+        $base = (float) $this->base_price;
+
+        if ($base <= 0) {
+            return 0;
+        }
+
+        $tiers = $this->relationLoaded('bulkPrices') ? $this->bulkPrices : $this->bulkPrices()->get();
+        $lowest = $tiers->min(fn (BulkPrice $tier) => (float) $tier->price_per_unit);
+
+        return $lowest === null ? 0 : max(0, (int) floor((1 - $lowest / $base) * 100));
+    }
+
     public function isInStock(int $quantity = 1): bool
     {
         return $this->stock >= $quantity;

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BulkPrice;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class CatalogController extends Controller
@@ -21,7 +24,32 @@ class CatalogController extends Controller
             ->paginate(12)
             ->withQueryString();
 
-        return view('catalog.index', compact('products', 'search'));
+        return view('catalog.index', [
+            'products' => $products,
+            'search' => $search,
+            'stats' => $this->catalogStats(),
+        ]);
+    }
+
+    /**
+     * Headline numbers for the hero. Cached briefly: they change rarely.
+     *
+     * @return array{products: int, tiers: int, max_saving: int}
+     */
+    private function catalogStats(): array
+    {
+        return Cache::remember('catalog.stats', now()->addMinutes(10), function (): array {
+            $maxRatio = BulkPrice::query()
+                ->join('products', 'products.id', '=', 'bulk_prices.product_id')
+                ->where('products.base_price', '>', 0)
+                ->max(DB::raw('1 - bulk_prices.price_per_unit / products.base_price'));
+
+            return [
+                'products' => Product::count(),
+                'tiers' => BulkPrice::count(),
+                'max_saving' => max(0, (int) floor(((float) $maxRatio) * 100)),
+            ];
+        });
     }
 
     public function show(Request $request, Product $product): View
