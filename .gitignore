@@ -25,3 +25,6 @@ yarn-error.log
 npm-audit*.txt
 composer-audit*.txt
 *.zip
+
+# Local secret helpers (never commit)
+.env.vercel
