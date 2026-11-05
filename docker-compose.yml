@@ -1,0 +1,98 @@
+# Nexora Wholesale - Docker Compose (Compose Specification; no `version:` key)
+#
+# Default: the app connects to your Supabase PostgreSQL database (set DB_* in
+# .env). For a fully local stack add the bundled PostgreSQL service:
+#   docker compose --profile local-db up -d --build   (and set DB_HOST=db)
+#
+# Mandatory secrets use ${VAR:?error}: `docker compose up` refuses to start
+# if they are unset. Defaults for optional values live ONLY in .env.example.
+# Any literal "$" in a value written in this file must be escaped as "$$".
+
+name: nexora-wholesale
+
+x-app-env: &app-env
+  APP_NAME: "Nexora Wholesale"
+  APP_ENV: ${APP_ENV:?APP_ENV is required}
+  APP_DEBUG: ${APP_DEBUG:?APP_DEBUG is required}
+  APP_KEY: ${APP_KEY:?APP_KEY is required - see HowToSetup.md}
+  APP_URL: ${APP_URL:?APP_URL is required}
+  LOG_CHANNEL: stderr
+  DB_CONNECTION: pgsql
+  DB_HOST: ${DB_HOST:?DB_HOST is required}
+  DB_PORT: ${DB_PORT:?DB_PORT is required}
+  DB_DATABASE: ${DB_DATABASE:?DB_DATABASE is required}
+  DB_USERNAME: ${DB_USERNAME:?DB_USERNAME is required}
+  DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+  DB_SSLMODE: ${DB_SSLMODE:?DB_SSLMODE is required}
+  SESSION_DRIVER: database
+  SESSION_ENCRYPT: "true"
+  SESSION_SECURE_COOKIE: ${SESSION_SECURE_COOKIE:?SESSION_SECURE_COOKIE is required}
+  CACHE_STORE: file
+  QUEUE_CONNECTION: sync
+  MAIL_MAILER: ${MAIL_MAILER:?MAIL_MAILER is required}
+  MAIL_HOST: ${MAIL_HOST:-}
+  MAIL_PORT: ${MAIL_PORT:-}
+  MAIL_USERNAME: ${MAIL_USERNAME:-}
+  MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+  MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:?MAIL_FROM_ADDRESS is required}
+  NEXORA_DEMO_MODE: ${NEXORA_DEMO_MODE:-false}
+  NEXORA_DEMO_URL: ${NEXORA_DEMO_URL:-}
+  SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-}
+  SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
+
+services:
+  app:
+    build:
+      context: .
+      target: runtime
+    image: nexora-wholesale:1.0.0
+    restart: unless-stopped
+    environment:
+      <<: *app-env
+      RUN_MIGRATIONS: "true"
+      RUN_SEED: ${RUN_SEED:-false}
+      RUN_SCHEDULER: "false"
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    volumes:
+      - app-storage:/var/www/html/storage/app
+    depends_on:
+      db:
+        condition: service_healthy
+        required: false
+
+  scheduler:
+    image: nexora-wholesale:1.0.0
+    restart: unless-stopped
+    environment:
+      <<: *app-env
+      RUN_MIGRATIONS: "false"
+    command: ["php", "artisan", "schedule:work"]
+    volumes:
+      - app-storage:/var/www/html/storage/app
+    depends_on:
+      app:
+        condition: service_healthy
+
+  # Optional local PostgreSQL (instead of Supabase): --profile local-db
+  db:
+    image: postgres:17-alpine
+    profiles: ["local-db"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:?DB_DATABASE is required}
+      POSTGRES_USER: ${DB_USERNAME:?DB_USERNAME is required}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+    healthcheck:
+      # "$$" passes a literal "$" to the container shell (Compose escaping).
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  app-storage:
+  db-data:

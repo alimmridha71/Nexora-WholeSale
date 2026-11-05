@@ -1,0 +1,62 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Product;
+use Illuminate\Database\Seeder;
+
+/**
+ * Curated demo catalog with realistic tiered pricing.
+ */
+class ProductSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $catalog = [
+            ['Industrial Steel Bolts M8 (Box of 100)', 'BLT-M8-100', 'Zinc-plated grade 8.8 hex bolts for structural assembly.', 18.50, 12000,
+                [[10, 49, 17.25], [50, 199, 15.90], [200, null, 14.20]]],
+            ['Recycled Kraft Shipping Boxes 12x12x12', 'BOX-KR-1212', 'Double-wall corrugated boxes, 100% recycled fiber.', 1.85, 85000,
+                [[100, 999, 1.62], [1000, 4999, 1.41], [5000, null, 1.19]]],
+            ['Nitrile Gloves, Powder-Free (Case of 1000)', 'GLV-NTR-1000', 'Food-safe blue nitrile gloves, size L.', 64.00, 3400,
+                [[5, 19, 59.50], [20, 99, 55.00], [100, null, 49.75]]],
+            ['LED Panel Light 600x600 40W', 'LED-PNL-6040', '4000K neutral white, 4400 lm, flicker-free driver.', 27.90, 5200,
+                [[20, 99, 25.40], [100, 499, 22.80], [500, null, 20.10]]],
+            ['Organic Arabica Coffee Beans 1kg', 'COF-ARB-1KG', 'Single-origin Colombian, medium roast, whole bean.', 21.00, 7800,
+                [[24, 119, 19.20], [120, 599, 17.60], [600, null, 15.90]]],
+            ['Stretch Wrap Film 500mm x 300m', 'PKG-STR-500', '23-micron cast stretch film for pallet wrapping.', 12.40, 15000,
+                [[36, 143, 11.30], [144, 575, 10.25], [576, null, 9.10]]],
+            ['Stainless Steel Water Bottle 750ml', 'BTL-SS-750', 'Vacuum-insulated, BPA-free, laser-engravable.', 8.95, 22000,
+                [[50, 249, 8.20], [250, 999, 7.45], [1000, null, 6.60]]],
+            ['A4 Copy Paper 80gsm (Box of 5 Reams)', 'PPR-A4-80', 'FSC-certified bright white multipurpose paper.', 24.75, 9600,
+                [[10, 49, 23.10], [50, 249, 21.40], [250, null, 19.80]]],
+            ['Cotton Crew T-Shirt Blank, Assorted', 'TEE-CTN-BLK', '180gsm ring-spun cotton, sizes S-XXL.', 3.60, 41000,
+                [[100, 499, 3.25], [500, 2499, 2.90], [2500, null, 2.55]]],
+            ['Lithium AA Batteries (Pack of 24)', 'BAT-AA-24', 'Long-life 1.5V lithium cells, 20-year shelf life.', 29.99, 60,
+                [[12, 47, 27.50], [48, null, 24.99]]],
+        ];
+
+        foreach ($catalog as [$name, $sku, $description, $price, $stock, $tiers]) {
+            $product = Product::updateOrCreate(
+                ['sku' => $sku],
+                ['name' => $name, 'description' => $description, 'base_price' => $price, 'stock' => $stock],
+            );
+
+            $product->bulkPrices()->delete();
+
+            foreach ($tiers as [$min, $max, $unit]) {
+                $product->bulkPrices()->create([
+                    'min_quantity' => $min,
+                    'max_quantity' => $max,
+                    'price_per_unit' => $unit,
+                ]);
+            }
+        }
+
+        // Generated products to exercise pagination and search (first run only,
+        // so re-seeding on every deploy does not grow the catalog).
+        if (Product::count() < count($catalog) + 10) {
+            Product::factory()->count(8)->withBulkTiers()->create();
+            Product::factory()->count(2)->outOfStock()->create();
+        }
+    }
+}

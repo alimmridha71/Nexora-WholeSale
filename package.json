@@ -1,0 +1,22 @@
+{
+    "name": "nexora-wholesale",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "description": "Frontend assets for Nexora Wholesale (Vite + Tailwind CSS).",
+    "engines": {
+        "php": "^8.3",
+        "node": ">=20"
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "audit:prod": "npm audit --omit=dev --audit-level=high"
+    },
+    "devDependencies": {
+        "@tailwindcss/vite": "4.3.4",
+        "laravel-vite-plugin": "2.1.0",
+        "tailwindcss": "4.3.4",
+        "vite": "7.3.7"
+    }
+}

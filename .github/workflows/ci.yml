@@ -1,0 +1,167 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # Generates composer.lock on the very first push (and applies Pint
+  # formatting at the same time), then commits it back. On every later run
+  # it only verifies that composer.json and composer.lock are in sync.
+  lockfile:
+    name: Composer lockfile
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_pgsql, pdo_sqlite, intl, bcmath
+          tools: composer:v2
+          coverage: none
+
+      - name: Create lockfile if missing
+        id: lock
+        run: |
+          if [ -f composer.lock ]; then
+            composer validate --strict
+            echo "created=false" >> "$GITHUB_OUTPUT"
+          else
+            composer update --no-interaction --prefer-dist --no-progress
+            vendor/bin/pint
+            echo "created=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit lockfile
+        if: steps.lock.outputs.created == 'true' && github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add composer.lock app bootstrap config database routes tests
+          git commit -m "chore: generate composer.lock and apply Pint formatting"
+          git push
+
+  tests:
+    name: Tests (${{ matrix.db }})
+    needs: lockfile
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        db: [sqlite, pgsql]
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: nexora_test
+          POSTGRES_USER: nexora
+          POSTGRES_PASSWORD: ci-only-not-a-secret
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U nexora"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_pgsql, pdo_sqlite, intl, bcmath
+          tools: composer:v2
+          coverage: none
+
+      - run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Code style
+        run: vendor/bin/pint --test
+
+      - name: Test suite
+        env:
+          DB_CONNECTION: ${{ matrix.db }}
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: ${{ matrix.db == 'pgsql' && 'nexora_test' || ':memory:' }}
+          DB_USERNAME: nexora
+          DB_PASSWORD: ci-only-not-a-secret
+        run: php artisan test
+
+      - name: Fresh migrate + seed (PostgreSQL)
+        if: matrix.db == 'pgsql'
+        env:
+          APP_ENV: testing
+          APP_KEY: base64:dGVzdGluZy1rZXktZG8tbm90LXVzZS0zMmJ5dGVzISE=
+          APP_URL: http://localhost
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: nexora_test
+          DB_USERNAME: nexora
+          DB_PASSWORD: ci-only-not-a-secret
+        run: |
+          php artisan migrate:fresh --force
+          php artisan db:seed --force
+          php artisan db:seed --force   # idempotency check
+
+      - name: schema.sql + seed.sql create from empty (PostgreSQL)
+        if: matrix.db == 'pgsql'
+        env:
+          PGPASSWORD: ci-only-not-a-secret
+        run: |
+          psql -h 127.0.0.1 -U nexora -d postgres -c "CREATE DATABASE nexora_sql"
+          psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U nexora -d nexora_sql -f database/schema.sql
+          psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U nexora -d nexora_sql -f database/seed.sql
+
+  audit:
+    name: Dependency audit + asset build
+    needs: lockfile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+          coverage: none
+
+      - name: composer audit
+        run: composer audit --locked
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+      - name: npm audit (production, high+)
+        run: npm audit --omit=dev --audit-level=high
+      - name: npm audit (all, high+)
+        run: npm audit --audit-level=high
+      - run: npm run build
+
+  docker:
+    name: Docker image builds
+    needs: lockfile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - name: Build runtime image (no secrets required)
+        run: docker build --target runtime -t nexora-wholesale:ci .
