@@ -18,7 +18,10 @@ class QuoteLookupTest extends TestCase
 
         $this->assertMatchesRegularExpression('/^NXQ-[0-9A-HJKMNP-TV-Z]{8}$/', $first->reference);
         $this->assertNotSame($first->reference, $second->reference);
-        $this->assertStringNotContainsString((string) $first->id, substr($first->reference, 4));
+
+        // Not derived from the auto-increment id (e.g. "NXQ-00000001").
+        $this->assertNotSame(sprintf('NXQ-%08d', $first->id), $first->reference);
+        $this->assertNotSame(sprintf('NXQ-%08d', $second->id), $second->reference);
     }
 
     public function test_lookup_requires_matching_reference_and_email(): void
