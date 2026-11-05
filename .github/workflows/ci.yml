@@ -97,7 +97,18 @@ jobs:
           DB_DATABASE: ${{ matrix.db == 'pgsql' && 'nexora_test' || ':memory:' }}
           DB_USERNAME: nexora
           DB_PASSWORD: ci-only-not-a-secret
-        run: php artisan test
+        run: |
+          set -o pipefail
+          php artisan test --compact 2>&1 | tee test-output.txt
+
+      # Surface failures as annotations (visible on the public run page).
+      - name: Report test failures
+        if: failure()
+        run: |
+          if [ -f test-output.txt ]; then
+            body=$(grep -v '^\s*$' test-output.txt | tail -c 60000 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
+            echo "::error title=Test output (${{ matrix.db }})::${body}"
+          fi
 
       - name: Fresh migrate + seed (PostgreSQL)
         if: matrix.db == 'pgsql'
