@@ -27,19 +27,19 @@ INSERT INTO users (id, name, email, email_verified_at, password, role, created_a
     (3, 'Meridian Distribution Co.', 'demo-distributor@nexora.test', NOW(), '$2y$12$xQW.15x.2DxaLtuBq1Z8n2CK.g8whuCwIA.V6maycX9kiH4XpAaPI', 'distributor', NOW(), NOW());
 
 -- ---------------------------------------------------------------------
--- Products
+-- Products (photos bundled in public/images/products; credits in docs/CREDITS.md)
 -- ---------------------------------------------------------------------
 INSERT INTO products (id, name, slug, description, image, base_price, stock, sku, created_at, updated_at) VALUES
-    (1,  'Industrial Steel Bolts M8 (Box of 100)',     'industrial-steel-bolts-m8-box-of-100',    'Zinc-plated grade 8.8 hex bolts for structural assembly.', NULL, 18.50, 12000, 'BLT-M8-100',   NOW(), NOW()),
-    (2,  'Recycled Kraft Shipping Boxes 12x12x12',     'recycled-kraft-shipping-boxes-12x12x12',  'Double-wall corrugated boxes, 100% recycled fiber.',       NULL,  1.85, 85000, 'BOX-KR-1212',  NOW(), NOW()),
-    (3,  'Nitrile Gloves, Powder-Free (Case of 1000)', 'nitrile-gloves-powder-free-case-of-1000', 'Food-safe blue nitrile gloves, size L.',                   NULL, 64.00,  3400, 'GLV-NTR-1000', NOW(), NOW()),
-    (4,  'LED Panel Light 600x600 40W',                'led-panel-light-600x600-40w',             '4000K neutral white, 4400 lm, flicker-free driver.',       NULL, 27.90,  5200, 'LED-PNL-6040', NOW(), NOW()),
-    (5,  'Organic Arabica Coffee Beans 1kg',           'organic-arabica-coffee-beans-1kg',        'Single-origin Colombian, medium roast, whole bean.',       NULL, 21.00,  7800, 'COF-ARB-1KG',  NOW(), NOW()),
-    (6,  'Stretch Wrap Film 500mm x 300m',             'stretch-wrap-film-500mm-x-300m',          '23-micron cast stretch film for pallet wrapping.',         NULL, 12.40, 15000, 'PKG-STR-500',  NOW(), NOW()),
-    (7,  'Stainless Steel Water Bottle 750ml',         'stainless-steel-water-bottle-750ml',      'Vacuum-insulated, BPA-free, laser-engravable.',            NULL,  8.95, 22000, 'BTL-SS-750',   NOW(), NOW()),
-    (8,  'A4 Copy Paper 80gsm (Box of 5 Reams)',       'a4-copy-paper-80gsm-box-of-5-reams',      'FSC-certified bright white multipurpose paper.',           NULL, 24.75,  9600, 'PPR-A4-80',    NOW(), NOW()),
-    (9,  'Cotton Crew T-Shirt Blank, Assorted',        'cotton-crew-t-shirt-blank-assorted',      '180gsm ring-spun cotton, sizes S-XXL.',                    NULL,  3.60, 41000, 'TEE-CTN-BLK',  NOW(), NOW()),
-    (10, 'Lithium AA Batteries (Pack of 24)',          'lithium-aa-batteries-pack-of-24',         'Long-life 1.5V lithium cells, 20-year shelf life.',        NULL, 29.99,    60, 'BAT-AA-24',    NOW(), NOW());
+    (1,  'Industrial Steel Bolts M8 (Box of 100)',     'industrial-steel-bolts-m8-box-of-100',    'Zinc-plated grade 8.8 hex bolts for structural assembly.', 'images/products/blt-m8-100.webp', 18.50, 12000, 'BLT-M8-100',   NOW(), NOW()),
+    (2,  'Recycled Kraft Shipping Boxes 12x12x12',     'recycled-kraft-shipping-boxes-12x12x12',  'Double-wall corrugated boxes, 100% recycled fiber.',       'images/products/box-kr-1212.webp',  1.85, 85000, 'BOX-KR-1212',  NOW(), NOW()),
+    (3,  'Nitrile Gloves, Powder-Free (Case of 1000)', 'nitrile-gloves-powder-free-case-of-1000', 'Food-safe blue nitrile gloves, size L.',                   'images/products/glv-ntr-1000.webp', 64.00,  3400, 'GLV-NTR-1000', NOW(), NOW()),
+    (4,  'LED Panel Light 600x600 40W',                'led-panel-light-600x600-40w',             '4000K neutral white, 4400 lm, flicker-free driver.',       'images/products/led-pnl-6040.webp', 27.90,  5200, 'LED-PNL-6040', NOW(), NOW()),
+    (5,  'Organic Arabica Coffee Beans 1kg',           'organic-arabica-coffee-beans-1kg',        'Single-origin Colombian, medium roast, whole bean.',       'images/products/cof-arb-1kg.webp', 21.00,  7800, 'COF-ARB-1KG',  NOW(), NOW()),
+    (6,  'EUR Wooden Pallets 1200x800 (Heat-Treated)', 'eur-wooden-pallets-1200x800-heat-treated', 'ISPM-15 heat-treated softwood pallets, 1,500 kg dynamic load.', 'images/products/plt-eur-1208.webp', 12.40, 15000, 'PLT-EUR-1208',  NOW(), NOW()),
+    (7,  'Stainless Steel Water Bottle 750ml',         'stainless-steel-water-bottle-750ml',      'Vacuum-insulated, BPA-free, laser-engravable.',            'images/products/btl-ss-750.webp',  8.95, 22000, 'BTL-SS-750',   NOW(), NOW()),
+    (8,  'A4 Copy Paper 80gsm (Box of 5 Reams)',       'a4-copy-paper-80gsm-box-of-5-reams',      'FSC-certified bright white multipurpose paper.',           'images/products/ppr-a4-80.webp', 24.75,  9600, 'PPR-A4-80',    NOW(), NOW()),
+    (9,  'Cotton Crew T-Shirt Blank, Assorted',        'cotton-crew-t-shirt-blank-assorted',      '180gsm ring-spun cotton, sizes S-XXL.',                    'images/products/tee-ctn-blk.webp',  3.60, 41000, 'TEE-CTN-BLK',  NOW(), NOW()),
+    (10, 'White Stoneware Mugs 350ml (Case of 12)',    'white-stoneware-mugs-350ml-case-of-12',   'Speckled glaze stoneware, dishwasher and microwave safe.', 'images/products/mug-crm-12.webp', 29.99,    60, 'MUG-CRM-12',    NOW(), NOW());
 
 -- ---------------------------------------------------------------------
 -- Bulk price tiers (non-overlapping; NULL max = open-ended)

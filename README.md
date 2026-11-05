@@ -58,6 +58,7 @@ php artisan serve
 | [docs/ERD.md](docs/ERD.md) | Entity-relationship diagram, FKs, RLS |
 | [docs/authorization-matrix.md](docs/authorization-matrix.md) | Every route with its middleware and in-handler policy check |
 | [SECURITY.md](SECURITY.md) | Vulnerability reporting and security design |
+| [docs/CREDITS.md](docs/CREDITS.md) | Product and hero photo credits (Unsplash License) |
 | [CHANGELOG.md](CHANGELOG.md) | Release history |
 | [database/schema.sql](database/schema.sql) · [seed.sql](database/seed.sql) | PostgreSQL schema and demo data |
 

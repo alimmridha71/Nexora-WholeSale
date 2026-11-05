@@ -138,9 +138,21 @@ class Product extends Model
         return $this->stock >= $quantity;
     }
 
+    /**
+     * Prefix of catalog photos bundled in the repository (public/images/...).
+     * Anything else is an admin upload on the "public" storage disk.
+     */
+    public const BUNDLED_IMAGE_PREFIX = 'images/';
+
     public function imageUrl(): ?string
     {
-        return $this->image ? Storage::disk('public')->url($this->image) : null;
+        if (blank($this->image)) {
+            return null;
+        }
+
+        return str_starts_with($this->image, self::BUNDLED_IMAGE_PREFIX)
+            ? asset($this->image)
+            : Storage::disk('public')->url($this->image);
     }
 
     /**

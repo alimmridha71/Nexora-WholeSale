@@ -63,9 +63,32 @@ class BulkPricingTest extends TestCase
 
         $this->get('/')
             ->assertOk()
-            ->assertSee('Wholesale pricing that')
-            ->assertSee('Save up to 30%')
-            ->assertSee('up to 30%');
+            ->assertSee('Business supplies, priced by volume.')
+            ->assertSee('Save up to 30% at volume')
+            ->assertSee('Largest bulk discount')
+            ->assertSee('10+ units');
+    }
+
+    public function test_bundled_images_resolve_to_public_assets(): void
+    {
+        $bundled = Product::factory()->create(['image' => 'images/products/blt-m8-100.webp']);
+        $uploaded = Product::factory()->create(['image' => 'products/upload.webp']);
+
+        $this->assertSame(asset('images/products/blt-m8-100.webp'), $bundled->imageUrl());
+        $this->assertStringContainsString('/storage/products/upload.webp', (string) $uploaded->imageUrl());
+        $this->assertNull(Product::factory()->create(['image' => null])->imageUrl());
+    }
+
+    public function test_every_seeded_product_has_an_existing_photo(): void
+    {
+        $this->seed(\Database\Seeders\ProductSeeder::class);
+
+        $this->assertSame(10, Product::count());
+
+        foreach (Product::all() as $product) {
+            $this->assertNotNull($product->image, "{$product->sku} has no image");
+            $this->assertFileExists(public_path($product->image), "{$product->sku} photo file is missing");
+        }
     }
 
     public function test_deleting_a_product_cascades_to_its_tiers(): void

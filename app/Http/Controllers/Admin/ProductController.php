@@ -83,7 +83,7 @@ class ProductController extends Controller
         $product->update($data);
 
         if ($oldImage && $oldImage !== $product->image) {
-            Storage::disk('public')->delete($oldImage);
+            $this->deleteUploadedImage($oldImage);
         }
 
         return redirect()->route('admin.products.edit', $product)->with('status', 'Product updated.');
@@ -99,9 +99,20 @@ class ProductController extends Controller
         DB::transaction(fn () => $product->delete());
 
         if ($image) {
-            Storage::disk('public')->delete($image);
+            $this->deleteUploadedImage($image);
         }
 
         return redirect()->route('admin.products.index')->with('status', 'Product deleted.');
+    }
+
+    /**
+     * Delete an admin-uploaded image. Bundled catalog photos (public/images)
+     * are part of the repository and are never deleted.
+     */
+    private function deleteUploadedImage(string $path): void
+    {
+        if (! str_starts_with($path, Product::BUNDLED_IMAGE_PREFIX)) {
+            Storage::disk('public')->delete($path);
+        }
     }
 }

@@ -7,50 +7,48 @@
 
 /*
 | Brand theme (see HowToSetup.md > Branding). Change these tokens to rebrand.
-| brand  = primary indigo-violet, ink = deep navy surfaces, accent = gold.
+| brand  = navy blue (actions, links), ink = text and dark surfaces,
+| accent = amber (promotions, highlights).
 */
 @theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
-    --color-brand-50: #f1f0ff;
-    --color-brand-100: #e4e2ff;
-    --color-brand-200: #cbc7ff;
-    --color-brand-300: #a79ffd;
-    --color-brand-400: #8a7bf8;
-    --color-brand-500: #6e57f0;
-    --color-brand-600: #5b3fe0;
-    --color-brand-700: #4b31c2;
-    --color-brand-800: #3d2a9c;
-    --color-brand-900: #2a1f6b;
+    --color-brand-50: #eef4fb;
+    --color-brand-100: #d9e6f5;
+    --color-brand-200: #b3cdea;
+    --color-brand-300: #84acd9;
+    --color-brand-400: #4f84c2;
+    --color-brand-500: #2f67a8;
+    --color-brand-600: #1f528f;
+    --color-brand-700: #184275;
+    --color-brand-800: #13345c;
+    --color-brand-900: #0e2644;
 
-    --color-ink-700: #1e2440;
-    --color-ink-800: #141a33;
-    --color-ink-900: #0b1024;
-    --color-ink-950: #060914;
+    --color-ink-700: #2b3445;
+    --color-ink-800: #1b2230;
+    --color-ink-900: #111722;
+    --color-ink-950: #0a0f18;
 
-    --color-accent-300: #fcd98a;
-    --color-accent-400: #f8c35b;
-    --color-accent-500: #eda833;
+    --color-accent-300: #fcd34d;
+    --color-accent-400: #fbbf24;
+    --color-accent-500: #f59e0b;
+    --color-accent-600: #d97706;
 
-    --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
-    --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.05), 0 24px 48px -20px rgb(42 31 107 / 0.35);
+    --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.05), 0 1px 3px rgb(15 23 42 / 0.06);
+    --shadow-lift: 0 4px 6px -1px rgb(15 23 42 / 0.08), 0 10px 20px -8px rgb(15 23 42 / 0.15);
 }
 
 @utility btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold transition duration-150 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-50;
 }
 
 @utility badge {
-    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+    @apply inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-semibold;
 }
 
 @layer base {
-    html {
-        scroll-behavior: smooth;
-    }
-
     ::selection {
-        @apply bg-brand-200 text-ink-900;
+        @apply bg-brand-100 text-ink-900;
     }
 }
 
@@ -60,7 +58,7 @@
     }
 
     .card {
-        @apply rounded-2xl border border-slate-200/80 bg-white p-6 shadow-soft;
+        @apply rounded-lg border border-slate-200 bg-white p-6 shadow-soft;
     }
 
     .label {
@@ -68,23 +66,23 @@
     }
 
     .input {
-        @apply block w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 focus:outline-none;
+        @apply block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 focus:outline-none;
     }
 
     .btn-primary {
-        @apply btn bg-linear-to-b from-brand-500 to-brand-700 text-white shadow-md shadow-brand-700/25 hover:from-brand-600 hover:to-brand-800 hover:shadow-lg focus-visible:ring-brand-500;
+        @apply btn bg-brand-600 text-white shadow-sm hover:bg-brand-700 focus-visible:ring-brand-500;
     }
 
     .btn-secondary {
         @apply btn border border-slate-300 bg-white text-slate-700 shadow-sm hover:border-slate-400 hover:bg-slate-50 focus-visible:ring-slate-400;
     }
 
-    .btn-gold {
-        @apply btn bg-linear-to-b from-accent-300 to-accent-500 text-ink-900 shadow-md shadow-accent-500/30 hover:from-accent-400 hover:to-accent-500 focus-visible:ring-accent-400;
+    .btn-accent {
+        @apply btn bg-accent-400 text-ink-900 shadow-sm hover:bg-accent-300 focus-visible:ring-accent-400;
     }
 
-    .btn-ghost-light {
-        @apply btn border border-white/20 bg-white/5 text-white backdrop-blur hover:bg-white/10 focus-visible:ring-white/60;
+    .btn-outline-light {
+        @apply btn border border-white/40 text-white hover:bg-white/10 focus-visible:ring-white/60;
     }
 
     .btn-danger {
@@ -92,15 +90,15 @@
     }
 
     .nav-link {
-        @apply rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-ink-900;
+        @apply rounded-md px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-ink-900;
     }
 
     .eyebrow {
-        @apply text-xs font-semibold tracking-[0.18em] text-brand-600 uppercase;
+        @apply text-xs font-semibold tracking-wider text-brand-600 uppercase;
     }
 
     .section-title {
-        @apply text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl;
+        @apply text-2xl font-bold tracking-tight text-ink-900 sm:text-3xl;
     }
 
     .table {
@@ -127,22 +125,19 @@
 
     /* Product card */
     .product-card {
-        @apply relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-soft transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift;
+        @apply relative flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-soft transition duration-200 hover:border-slate-300 hover:shadow-lift;
     }
 
     .product-media {
-        @apply relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-linear-to-br from-brand-50 via-white to-accent-300/20;
+        @apply relative block aspect-[4/3] overflow-hidden bg-slate-100;
     }
 
-    /* Hero decoration */
-    .hero-glow {
-        @apply pointer-events-none absolute rounded-full blur-3xl;
-    }
-
-    .grid-pattern {
+    /* Hero photo with a readable dark overlay (bundled image, CSP-safe). */
+    .hero-photo {
         background-image:
-            linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
-            linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
-        background-size: 44px 44px;
+            linear-gradient(90deg, rgb(10 15 24 / 0.92) 0%, rgb(10 15 24 / 0.78) 45%, rgb(10 15 24 / 0.35) 100%),
+            url('/images/hero-warehouse.webp');
+        background-size: cover;
+        background-position: center;
     }
 }

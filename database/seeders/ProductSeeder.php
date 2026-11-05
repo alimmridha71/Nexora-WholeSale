@@ -6,12 +6,15 @@ use App\Models\Product;
 use Illuminate\Database\Seeder;
 
 /**
- * Curated demo catalog with realistic tiered pricing.
+ * Curated demo catalog with realistic tiered pricing and real product photos
+ * (bundled in public/images/products, credits in docs/CREDITS.md).
+ * Idempotent: products are matched by SKU and their tiers are rebuilt.
  */
 class ProductSeeder extends Seeder
 {
     public function run(): void
     {
+        // [name, sku, description, base price, stock, [[min, max, unit], ...]]
         $catalog = [
             ['Industrial Steel Bolts M8 (Box of 100)', 'BLT-M8-100', 'Zinc-plated grade 8.8 hex bolts for structural assembly.', 18.50, 12000,
                 [[10, 49, 17.25], [50, 199, 15.90], [200, null, 14.20]]],
@@ -23,7 +26,7 @@ class ProductSeeder extends Seeder
                 [[20, 99, 25.40], [100, 499, 22.80], [500, null, 20.10]]],
             ['Organic Arabica Coffee Beans 1kg', 'COF-ARB-1KG', 'Single-origin Colombian, medium roast, whole bean.', 21.00, 7800,
                 [[24, 119, 19.20], [120, 599, 17.60], [600, null, 15.90]]],
-            ['Stretch Wrap Film 500mm x 300m', 'PKG-STR-500', '23-micron cast stretch film for pallet wrapping.', 12.40, 15000,
+            ['EUR Wooden Pallets 1200x800 (Heat-Treated)', 'PLT-EUR-1208', 'ISPM-15 heat-treated softwood pallets, 1,500 kg dynamic load.', 12.40, 15000,
                 [[36, 143, 11.30], [144, 575, 10.25], [576, null, 9.10]]],
             ['Stainless Steel Water Bottle 750ml', 'BTL-SS-750', 'Vacuum-insulated, BPA-free, laser-engravable.', 8.95, 22000,
                 [[50, 249, 8.20], [250, 999, 7.45], [1000, null, 6.60]]],
@@ -31,14 +34,20 @@ class ProductSeeder extends Seeder
                 [[10, 49, 23.10], [50, 249, 21.40], [250, null, 19.80]]],
             ['Cotton Crew T-Shirt Blank, Assorted', 'TEE-CTN-BLK', '180gsm ring-spun cotton, sizes S-XXL.', 3.60, 41000,
                 [[100, 499, 3.25], [500, 2499, 2.90], [2500, null, 2.55]]],
-            ['Lithium AA Batteries (Pack of 24)', 'BAT-AA-24', 'Long-life 1.5V lithium cells, 20-year shelf life.', 29.99, 60,
+            ['White Stoneware Mugs 350ml (Case of 12)', 'MUG-CRM-12', 'Speckled glaze stoneware, dishwasher and microwave safe.', 29.99, 60,
                 [[12, 47, 27.50], [48, null, 24.99]]],
         ];
 
         foreach ($catalog as [$name, $sku, $description, $price, $stock, $tiers]) {
             $product = Product::updateOrCreate(
                 ['sku' => $sku],
-                ['name' => $name, 'description' => $description, 'base_price' => $price, 'stock' => $stock],
+                [
+                    'name' => $name,
+                    'description' => $description,
+                    'base_price' => $price,
+                    'stock' => $stock,
+                    'image' => Product::BUNDLED_IMAGE_PREFIX.'products/'.strtolower($sku).'.webp',
+                ],
             );
 
             $product->bulkPrices()->delete();
@@ -50,13 +59,6 @@ class ProductSeeder extends Seeder
                     'price_per_unit' => $unit,
                 ]);
             }
-        }
-
-        // Generated products to exercise pagination and search (first run only,
-        // so re-seeding on every deploy does not grow the catalog).
-        if (Product::count() < count($catalog) + 10) {
-            Product::factory()->count(8)->withBulkTiers()->create();
-            Product::factory()->count(2)->outOfStock()->create();
         }
     }
 }

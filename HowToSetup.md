@@ -268,7 +268,9 @@ There is **no default admin and no default password**. Use either:
 | What | Where |
 |---|---|
 | Product name | `APP_NAME` in `.env`. The wordmark is in `resources/views/layouts/app.blade.php` (header) |
-| Brand colours | `@theme` block in `resources/css/app.css` (`--color-brand-50` … `--color-brand-900`). Tailwind 4 has no `tailwind.config.js`; the theme lives in CSS |
+| Brand colours | `@theme` block in `resources/css/app.css`: `--color-brand-*` (navy, actions and links), `--color-ink-*` (text and dark surfaces), `--color-accent-*` (amber highlights). Tailwind 4 has no `tailwind.config.js`; the theme lives in CSS |
+| Hero photo | `public/images/hero-warehouse.webp` (1920×960). Referenced by `.hero-photo` in `resources/css/app.css` |
+| Product photos | `public/images/products/<lower-case-sku>.webp` (800×600). Credit each one in [docs/CREDITS.md](docs/CREDITS.md) |
 | Fonts | `--font-sans` in the same `@theme` block |
 | Buttons, cards, badges | `@layer components` in `resources/css/app.css` |
 | Currency | `NEXORA_CURRENCY` (ISO 4217, e.g. `EUR`), formatted everywhere by `@money` |

@@ -5,6 +5,19 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Added
+- Real product photos for the whole demo catalog, plus a warehouse hero photo. All are free Unsplash License images, bundled as WebP in `public/images/` and credited in `docs/CREDITS.md`.
+- Product cards list their volume price breaks and a "save up to X% at volume" line.
+- Tests: bundled image URLs resolve, every seeded product has an existing photo file, and the home page shows the hero and the tier rows.
+
+### Changed
+- Visual redesign with a restrained distributor look: navy and amber palette, utility bar, photo hero with product search, square-cornered cards, and a plain light footer. Gradient glows, grid patterns and gradient text are removed.
+- Demo catalog: "Stretch Wrap Film" is replaced by "EUR Wooden Pallets 1200x800" (`PLT-EUR-1208`) and "Lithium AA Batteries" by "White Stoneware Mugs (Case of 12)" (`MUG-CRM-12`), because no license-clean photos without brand logos were available. IDs, prices and tiers are unchanged.
+- `ProductSeeder` no longer adds Faker-generated products, so the demo catalog contains real items only.
+
+### Fixed
+- Admin product update and delete never remove bundled catalog photos.
+
 ## [1.0.0] - 2026-11-05
 
 ### Added
