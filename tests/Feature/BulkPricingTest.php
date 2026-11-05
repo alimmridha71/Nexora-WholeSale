@@ -84,7 +84,7 @@ class BulkPricingTest extends TestCase
     {
         $this->seed(ProductSeeder::class);
 
-        $this->assertSame(10, Product::count());
+        $this->assertSame(16, Product::count());
 
         foreach (Product::all() as $product) {
             $this->assertNotNull($product->image, "{$product->sku} has no image");

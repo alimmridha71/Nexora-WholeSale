@@ -17,6 +17,12 @@ No Unsplash+ (paid) images are used. Every photo below was confirmed as a "Free 
 | `images/products/ppr-a4-80.webp` | A4 Copy Paper | ron dyar (@prolabprints) | [Unsplash](https://unsplash.com/photos/stack-of-papers-V29UWcALNko) |
 | `images/products/tee-ctn-blk.webp` | Cotton Crew T-Shirt Blank | Md Salman (@mohammadsalman) | [Unsplash](https://unsplash.com/photos/assorted-color-folded-shirts-on-wooden-panel-tWOz2_EK5EQ) |
 | `images/products/mug-crm-12.webp` | White Stoneware Mugs | Tom Crew (@tomcrewceramics) | [Unsplash](https://unsplash.com/photos/white-ceramic-mug-lot-on-white-surface-oHrC8V_XRU4) |
+| `images/products/hat-abs-yel.webp` | ABS Safety Hard Hats | Declan Sun (@declansun) | [Unsplash](https://unsplash.com/photos/several-bright-yellow-hard-hats-are-neatly-lined-up-LutB1xxyArA) |
+| `images/products/vst-hv-yel.webp` | Hi-Vis Safety Vests | Tanya Paquet (@tanyapaquet) | [Unsplash](https://unsplash.com/photos/hard-hats-and-safety-vests-wjHdeYmI-XU) |
+| `images/products/bag-krf-m.webp` | Kraft Paper Shopping Bags | Kelly Sikkema (@kellysikkema) | [Unsplash](https://unsplash.com/photos/beige-eco-bag-1Pgq9ZpIatI) |
+| `images/products/tot-ctn-nat.webp` | Natural Cotton Tote Bags | Brando Makes Branding (@brandomakesbranding) | [Unsplash](https://unsplash.com/photos/white-reusable-bag-on-gray-surface-smTDI-z1rlY) |
+| `images/products/jar-gls-750.webp` | Glass Storage Jars 750ml | Kier in Sight Archives (@kierinsightarchives) | [Unsplash](https://unsplash.com/photos/empty-glass-jar-with-black-lid-b29z0iltxk4) |
+| `images/products/cup-krf-8.webp` | Kraft Paper Hot Cups 8oz | Vlad Deep (@vladdeep) | [Unsplash](https://unsplash.com/photos/several-empty-paper-cups-arranged-on-a-white-surface-Q3EOR8YuTDE) |
 
 ## Replacing photos
 

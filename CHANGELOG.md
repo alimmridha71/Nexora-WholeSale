@@ -6,6 +6,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ## [Unreleased]
 
 ### Added
+- Six more catalog products with photos and volume tiers: ABS safety hard hats, hi-vis safety vests, kraft paper shopping bags, cotton tote bags, glass storage jars and kraft hot cups (16 products, 47 price breaks).
+- Catalog page size is configurable (`nexora.catalog.per_page`, default 16).
 - Real product photos for the whole demo catalog, plus a warehouse hero photo. All are free Unsplash License images, bundled as WebP in `public/images/` and credited in `docs/CREDITS.md`.
 - Product cards list their volume price breaks and a "save up to X% at volume" line.
 - Tests: bundled image URLs resolve, every seeded product has an existing photo file, and the home page shows the hero and the tier rows.

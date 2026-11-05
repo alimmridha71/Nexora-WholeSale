@@ -39,7 +39,13 @@ INSERT INTO products (id, name, slug, description, image, base_price, stock, sku
     (7,  'Stainless Steel Water Bottle 750ml',         'stainless-steel-water-bottle-750ml',      'Vacuum-insulated, BPA-free, laser-engravable.',            'images/products/btl-ss-750.webp',  8.95, 22000, 'BTL-SS-750',   NOW(), NOW()),
     (8,  'A4 Copy Paper 80gsm (Box of 5 Reams)',       'a4-copy-paper-80gsm-box-of-5-reams',      'FSC-certified bright white multipurpose paper.',           'images/products/ppr-a4-80.webp', 24.75,  9600, 'PPR-A4-80',    NOW(), NOW()),
     (9,  'Cotton Crew T-Shirt Blank, Assorted',        'cotton-crew-t-shirt-blank-assorted',      '180gsm ring-spun cotton, sizes S-XXL.',                    'images/products/tee-ctn-blk.webp',  3.60, 41000, 'TEE-CTN-BLK',  NOW(), NOW()),
-    (10, 'White Stoneware Mugs 350ml (Case of 12)',    'white-stoneware-mugs-350ml-case-of-12',   'Speckled glaze stoneware, dishwasher and microwave safe.', 'images/products/mug-crm-12.webp', 29.99,    60, 'MUG-CRM-12',    NOW(), NOW());
+    (10, 'White Stoneware Mugs 350ml (Case of 12)',    'white-stoneware-mugs-350ml-case-of-12',   'Speckled glaze stoneware, dishwasher and microwave safe.', 'images/products/mug-crm-12.webp', 29.99,    60, 'MUG-CRM-12',    NOW(), NOW()),
+    (11, 'ABS Safety Hard Hats, Yellow (Case of 20)', 'abs-safety-hard-hats-yellow-case-of-20', 'EN 397 ABS shell, 6-point ratchet harness, adjustable 53-63 cm.', 'images/products/hat-abs-yel.webp', 89.00, 1800, 'HAT-ABS-YEL', NOW(), NOW()),
+    (12, 'Hi-Vis Safety Vests, Yellow (Pack of 10)', 'hi-vis-safety-vests-yellow-pack-of-10', 'EN ISO 20471 Class 2, two reflective bands, ID pocket, one size.', 'images/products/vst-hv-yel.webp', 24.50, 6400, 'VST-HV-YEL', NOW(), NOW()),
+    (13, 'Kraft Paper Shopping Bags with Handles, Medium', 'kraft-paper-shopping-bags-with-handles-medium', '100 gsm recycled kraft, twisted paper handles, 32x12x41 cm.', 'images/products/bag-krf-m.webp', 0.42, 120000, 'BAG-KRF-M', NOW(), NOW()),
+    (14, 'Natural Cotton Tote Bags 38x42cm, Blank', 'natural-cotton-tote-bags-38x42cm-blank', '140 gsm unbleached cotton, long handles, ready for printing.', 'images/products/tot-ctn-nat.webp', 1.95, 30000, 'TOT-CTN-NAT', NOW(), NOW()),
+    (15, 'Glass Storage Jars 750ml with Metal Lid (Case of 12)', 'glass-storage-jars-750ml-with-metal-lid-case-of-12', 'Food-grade glass, airtight screw lid, dishwasher safe.', 'images/products/jar-gls-750.webp', 18.90, 2600, 'JAR-GLS-750', NOW(), NOW()),
+    (16, 'Kraft Paper Hot Cups 8oz (Case of 1000)', 'kraft-paper-hot-cups-8oz-case-of-1000', 'Single-wall kraft cups for hot drinks, PLA lined, fits 80 mm lids.', 'images/products/cup-krf-8.webp', 46.00, 4100, 'CUP-KRF-8', NOW(), NOW());
 
 -- ---------------------------------------------------------------------
 -- Bulk price tiers (non-overlapping; NULL max = open-ended)
@@ -54,7 +60,13 @@ INSERT INTO bulk_prices (product_id, min_quantity, max_quantity, price_per_unit,
     (7,   50,  249,  8.20, NOW(), NOW()), (7,  250,  999,  7.45, NOW(), NOW()), (7, 1000, NULL,  6.60, NOW(), NOW()),
     (8,   10,   49, 23.10, NOW(), NOW()), (8,   50,  249, 21.40, NOW(), NOW()), (8,  250, NULL, 19.80, NOW(), NOW()),
     (9,  100,  499,  3.25, NOW(), NOW()), (9,  500, 2499,  2.90, NOW(), NOW()), (9, 2500, NULL,  2.55, NOW(), NOW()),
-    (10,  12,   47, 27.50, NOW(), NOW()), (10,  48, NULL, 24.99, NOW(), NOW());
+    (10,  12,   47, 27.50, NOW(), NOW()), (10,  48, NULL, 24.99, NOW(), NOW()),
+    (11, 5, 19, 84.50, NOW(), NOW()), (11, 20, 99, 79.00, NOW(), NOW()), (11, 100, NULL, 72.50, NOW(), NOW()),
+    (12, 10, 49, 22.90, NOW(), NOW()), (12, 50, 199, 21.10, NOW(), NOW()), (12, 200, NULL, 19.40, NOW(), NOW()),
+    (13, 500, 2499, 0.37, NOW(), NOW()), (13, 2500, 9999, 0.32, NOW(), NOW()), (13, 10000, NULL, 0.27, NOW(), NOW()),
+    (14, 100, 499, 1.75, NOW(), NOW()), (14, 500, 1999, 1.55, NOW(), NOW()), (14, 2000, NULL, 1.35, NOW(), NOW()),
+    (15, 10, 49, 17.40, NOW(), NOW()), (15, 50, 199, 16.10, NOW(), NOW()), (15, 200, NULL, 14.80, NOW(), NOW()),
+    (16, 5, 19, 43.20, NOW(), NOW()), (16, 20, 99, 40.50, NOW(), NOW()), (16, 100, NULL, 37.90, NOW(), NOW());
 
 -- ---------------------------------------------------------------------
 -- Quotes (every status represented; random non-sequential references)

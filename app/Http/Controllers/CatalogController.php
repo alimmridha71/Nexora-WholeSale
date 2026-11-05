@@ -21,7 +21,7 @@ class CatalogController extends Controller
             ->search($search)
             ->with('bulkPrices')
             ->orderBy('name')
-            ->paginate(12)
+            ->paginate((int) config('nexora.catalog.per_page'))
             ->withQueryString();
 
         return view('catalog.index', [

@@ -36,6 +36,18 @@ class ProductSeeder extends Seeder
                 [[100, 499, 3.25], [500, 2499, 2.90], [2500, null, 2.55]]],
             ['White Stoneware Mugs 350ml (Case of 12)', 'MUG-CRM-12', 'Speckled glaze stoneware, dishwasher and microwave safe.', 29.99, 60,
                 [[12, 47, 27.50], [48, null, 24.99]]],
+            ['ABS Safety Hard Hats, Yellow (Case of 20)', 'HAT-ABS-YEL', 'EN 397 ABS shell, 6-point ratchet harness, adjustable 53-63 cm.', 89.00, 1800,
+                [[5, 19, 84.50], [20, 99, 79.00], [100, null, 72.50]]],
+            ['Hi-Vis Safety Vests, Yellow (Pack of 10)', 'VST-HV-YEL', 'EN ISO 20471 Class 2, two reflective bands, ID pocket, one size.', 24.50, 6400,
+                [[10, 49, 22.90], [50, 199, 21.10], [200, null, 19.40]]],
+            ['Kraft Paper Shopping Bags with Handles, Medium', 'BAG-KRF-M', '100 gsm recycled kraft, twisted paper handles, 32x12x41 cm.', 0.42, 120000,
+                [[500, 2499, 0.37], [2500, 9999, 0.32], [10000, null, 0.27]]],
+            ['Natural Cotton Tote Bags 38x42cm, Blank', 'TOT-CTN-NAT', '140 gsm unbleached cotton, long handles, ready for printing.', 1.95, 30000,
+                [[100, 499, 1.75], [500, 1999, 1.55], [2000, null, 1.35]]],
+            ['Glass Storage Jars 750ml with Metal Lid (Case of 12)', 'JAR-GLS-750', 'Food-grade glass, airtight screw lid, dishwasher safe.', 18.90, 2600,
+                [[10, 49, 17.40], [50, 199, 16.10], [200, null, 14.80]]],
+            ['Kraft Paper Hot Cups 8oz (Case of 1000)', 'CUP-KRF-8', 'Single-wall kraft cups for hot drinks, PLA lined, fits 80 mm lids.', 46.00, 4100,
+                [[5, 19, 43.20], [20, 99, 40.50], [100, null, 37.90]]],
         ];
 
         foreach ($catalog as [$name, $sku, $description, $price, $stock, $tiers]) {

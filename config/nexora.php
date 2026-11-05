@@ -23,6 +23,11 @@ return [
     // the scheduled `nexora:expire-quotes` command.
     'quote_expiry_days' => (int) env('NEXORA_QUOTE_EXPIRY_DAYS', 30),
 
+    'catalog' => [
+        // Products per catalog page (4 full rows on wide screens).
+        'per_page' => 16,
+    ],
+
     'quotes' => [
         // Upper bound of line items accepted in one quote request.
         'max_items' => 50,
