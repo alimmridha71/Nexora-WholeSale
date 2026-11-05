@@ -87,7 +87,13 @@ jobs:
       - run: composer install --no-interaction --prefer-dist --no-progress
 
       - name: Code style
-        run: vendor/bin/pint --test
+        run: |
+          if ! vendor/bin/pint --test -v > pint-output.txt 2>&1; then
+            body=$(grep -v "^s*$" pint-output.txt | head -c 20000 | sed "s/%/%25/g" | sed ":a;N;a;s/
+/%0A/g")
+            echo "::error title=Pint (code style)::${body}"
+            exit 1
+          fi
 
       - name: Test suite
         env:

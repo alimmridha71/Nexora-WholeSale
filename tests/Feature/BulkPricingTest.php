@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
+use Database\Seeders\ProductSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -81,7 +82,7 @@ class BulkPricingTest extends TestCase
 
     public function test_every_seeded_product_has_an_existing_photo(): void
     {
-        $this->seed(\Database\Seeders\ProductSeeder::class);
+        $this->seed(ProductSeeder::class);
 
         $this->assertSame(10, Product::count());
 
