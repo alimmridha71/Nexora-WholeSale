@@ -55,4 +55,36 @@ if (! is_dir('/tmp/laravel/views')) {
     mkdir('/tmp/laravel/views', 0755, true);
 }
 
+// TEMPORARY deployment diagnostics: booleans and names only, never values.
+if (parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) === '/__nexora_diag') {
+    header('Content-Type: application/json');
+    $root = dirname(__DIR__);
+    $names = ['APP_KEY', 'APP_URL', 'DB_HOST', 'DB_USERNAME', 'DB_PASSWORD', 'CRON_SECRET', 'NEXORA_DEMO_MODE'];
+    $result = [
+        'php' => PHP_VERSION,
+        'pdo_pgsql' => extension_loaded('pdo_pgsql'),
+        'intl' => extension_loaded('intl'),
+        'vendor_autoload' => is_file($root.'/vendor/autoload.php'),
+        'build_manifest' => is_file($root.'/public/build/manifest.json'),
+        'bootstrap_cache_writable' => is_writable($root.'/bootstrap/cache'),
+        'tmp_writable' => is_writable('/tmp/laravel/views'),
+        'env_set' => array_combine($names, array_map(fn ($n) => getenv($n) !== false && getenv($n) !== '', $names)),
+    ];
+    try {
+        require $root.'/vendor/autoload.php';
+        $app = require $root.'/bootstrap/app.php';
+        $app->make(Illuminate\Contracts\Http\Kernel::class)->bootstrap();
+        $result['laravel_boot'] = 'ok';
+        $app['db']->connection()->getPdo();
+        $result['database'] = 'ok';
+    } catch (Throwable $e) {
+        $result['error_class'] = get_class($e);
+        $result['error_message'] = preg_replace('/(password|pwd|secret|key)[=:]\S+/i', '$1=***', $e->getMessage());
+        $result['error_at'] = basename($e->getFile()).':'.$e->getLine();
+    }
+    echo json_encode($result, JSON_PRETTY_PRINT);
+
+    return;
+}
+
 require __DIR__.'/../public/index.php';
