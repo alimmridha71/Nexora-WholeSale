@@ -89,8 +89,7 @@ jobs:
       - name: Code style
         run: |
           if ! vendor/bin/pint --test -v > pint-output.txt 2>&1; then
-            body=$(grep -v "^s*$" pint-output.txt | head -c 20000 | sed "s/%/%25/g" | sed ":a;N;a;s/
-/%0A/g")
+            body=$(grep -v '^\s*$' pint-output.txt | head -c 20000 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
             echo "::error title=Pint (code style)::${body}"
             exit 1
           fi
