@@ -19,9 +19,11 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Artisan commands that must work before the environment is fully
      * configured (e.g. generating APP_KEY or Composer's package discovery).
+     * `test` only launches PHPUnit, which then loads phpunit.xml and boots
+     * the app again with this check active.
      */
     private const BOOTSTRAP_COMMANDS = [
-        'key:generate', 'package:discover', 'list', 'help', 'about', 'env',
+        'key:generate', 'package:discover', 'list', 'help', 'about', 'env', 'test',
         'config:clear', 'cache:clear', 'optimize:clear', 'view:clear', 'route:clear',
     ];
 
