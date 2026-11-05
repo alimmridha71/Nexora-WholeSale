@@ -28,3 +28,6 @@ composer-audit*.txt
 
 # Local secret helpers (never commit)
 .env.vercel
+
+# Marketplace listing screenshots (not part of the app)
+/listing-images
