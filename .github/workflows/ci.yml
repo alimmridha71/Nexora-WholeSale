@@ -107,7 +107,7 @@ jobs:
         run: |
           if [ -f test-output.txt ]; then
             # Failure headlines + messages, without vendor stack frames.
-            body=$(grep -v '^\s*$' test-output.txt | grep -vE '^#[0-9]+ |vendor/' | head -c 30000 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
+            body=$(grep -v '^\s*$' test-output.txt | grep -vE '^#[0-9]+ |vendor/|Stack trace|^-+$|▕' | grep -A5 -E 'FAILED|Tests:' | head -c 30000 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')
             echo "::error title=Test output (${{ matrix.db }})::${body}"
           fi
 
