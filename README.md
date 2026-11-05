@@ -2,7 +2,7 @@
 
 **Nexora Wholesale** is a B2B wholesale ordering platform built on **Laravel 13** and **Supabase PostgreSQL**. Retailers, wholesalers and distributors browse a catalog with **tiered bulk pricing** and send **custom quote requests** for large orders. Administrators manage products, price tiers and the quote pipeline.
 
-**Live demo:** hosted on Vercel (serverless PHP) with Supabase PostgreSQL — URL below once deployed.
+**Live demo:** <https://nexora-whole-sale.vercel.app> (Vercel serverless PHP + Supabase PostgreSQL)
 
 On `/login`, click **Try the live demo** to sign in instantly as a sample retailer, wholesaler or distributor. No password is needed, and none is published. Admin access is provided to reviewers privately.
 
