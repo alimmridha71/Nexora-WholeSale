@@ -48,17 +48,21 @@
             @error('description') <p class="error">{{ $message }}</p> @enderror
         </div>
 
-        <div class="sm:col-span-2">
-            <label for="image" class="label">Image (JPG, PNG or WebP, max 2 MB)</label>
-            @if ($product->exists && $product->imageUrl())
-                <img src="{{ $product->imageUrl() }}" alt="" class="mb-2 h-24 rounded-lg object-cover">
-                <label class="mb-2 flex items-center gap-2 text-sm text-slate-700">
-                    <input type="checkbox" name="remove_image" value="1"> Remove current image
-                </label>
-            @endif
-            <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp" class="input">
-            @error('image') <p class="error">{{ $message }}</p> @enderror
-        </div>
+        @if (config('nexora.uploads_enabled'))
+            <div class="sm:col-span-2">
+                <label for="image" class="label">Image (JPG, PNG or WebP, max 2 MB)</label>
+                @if ($product->exists && $product->imageUrl())
+                    <img src="{{ $product->imageUrl() }}" alt="" class="mb-2 h-24 rounded-lg object-cover">
+                    <label class="mb-2 flex items-center gap-2 text-sm text-slate-700">
+                        <input type="checkbox" name="remove_image" value="1"> Remove current image
+                    </label>
+                @endif
+                <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp" class="input">
+                @error('image') <p class="error">{{ $message }}</p> @enderror
+            </div>
+        @else
+            <p class="text-sm text-slate-500 sm:col-span-2">Image uploads are disabled on this host (no persistent storage).</p>
+        @endif
 
         <div class="flex justify-end gap-2 sm:col-span-2">
             <a href="{{ route('admin.products.index') }}" class="btn-secondary">Cancel</a>

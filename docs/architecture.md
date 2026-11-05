@@ -35,6 +35,13 @@ Scheduler (schedule:work) ──▶ nexora:expire-quotes (daily 02:00)
 3. `ProductController::destroy` calls `$this->authorize('delete', $product)` (`ProductPolicy`).
 4. The product is deleted in a transaction. Its `bulk_prices` rows go through `ON DELETE CASCADE`. The image file is removed.
 
+## Serverless notes (Vercel)
+
+- The filesystem is read-only except `/tmp`. `api/index.php` points Laravel's compiled views and bootstrap caches at `/tmp` and logs to stderr.
+- Sessions **and** the cache (therefore rate limits) are stored in PostgreSQL, so they are shared across function instances.
+- Uploaded files would not survive, so `NEXORA_UPLOADS_ENABLED=false` disables product image uploads there.
+- The daily quote expiry runs through Vercel Cron, which calls a secret-protected endpoint. That endpoint and the `nexora:expire-quotes` command share `App\Actions\ExpireStaleQuotes`.
+
 ## Configuration and secrets
 
 - All runtime settings come from environment variables. `config/nexora.php` is the only app config file, and `.env.example` is the only template.
@@ -45,7 +52,8 @@ Scheduler (schedule:work) ──▶ nexora:expire-quotes (daily 02:00)
 
 | Target | Web | Scheduler | Database |
 |---|---|---|---|
-| Render (live demo) | Docker web service (`render.yaml`) | inside the container (`RUN_SCHEDULER=true`) | Supabase |
+| **Vercel (live demo)** | serverless PHP function `api/index.php` (`vercel-php`, `vercel.json`) | Vercel Cron → `GET /cron/expire-quotes` (Bearer `CRON_SECRET`) | Supabase |
+| Render | Docker web service (`render.yaml`) | inside the container (`RUN_SCHEDULER=true`) | Supabase |
 | VPS | Nginx + PHP-FPM (systemd) | `nexora-scheduler.service` (systemd) | Supabase or local PostgreSQL |
 | Docker Compose | `app` service | `scheduler` service | Supabase, or `--profile local-db` |
 

@@ -1,13 +1,14 @@
 # How to set up Nexora Wholesale
 
-This guide goes from a clean machine to a running Nexora Wholesale. It covers four install targets:
+This guide goes from a clean machine to a running Nexora Wholesale. It covers five install targets:
 
 | Target | Best for | Section |
 |---|---|---|
 | **A. Local development** | Working on the code | [§3](#3-target-a--local-development) |
-| **B. Render (Docker) + Supabase** | Free hosted demo | [§4](#4-target-b--render-docker--supabase) |
-| **C. VPS: Nginx + PHP-FPM + systemd** | Your own Ubuntu server | [§5](#5-target-c--vps-ubuntu-nginx--php-fpm--systemd) |
-| **D. Docker Compose** | Any Docker host | [§6](#6-target-d--docker-compose) |
+| **B. Vercel (serverless) + Supabase** | Free hosted live demo | [§4](#4-target-b--vercel-serverless--supabase) |
+| **C. Render (Docker) + Supabase** | Hosted, always-on container | [§5](#5-target-c--render-docker--supabase) |
+| **D. VPS: Nginx + PHP-FPM + systemd** | Your own Ubuntu server | [§6](#6-target-d--vps-ubuntu-nginx--php-fpm--systemd) |
+| **E. Docker Compose** | Any Docker host | [§7](#7-target-e--docker-compose) |
 
 ---
 
@@ -15,16 +16,16 @@ This guide goes from a clean machine to a running Nexora Wholesale. It covers fo
 
 | Tool | Version | Needed for |
 |---|---|---|
-| PHP | **8.3+** with `pdo_pgsql`, `pdo_sqlite`, `mbstring`, `openssl`, `bcmath`, `intl`, `fileinfo`, `tokenizer`, `xml`, `ctype`, `curl` | A, C |
+| PHP | **8.3+** (Vercel provides it) with `pdo_pgsql`, `pdo_sqlite`, `mbstring`, `openssl`, `bcmath`, `intl`, `fileinfo`, `tokenizer`, `xml`, `ctype`, `curl` | A, C |
 | Composer | 2.x | A, C |
 | Node.js | **20+** (npm 10+) | A, C (asset build) |
 | PostgreSQL | 15+: a **Supabase** project (free tier is fine) or a local server | all |
-| Docker | Engine 24+ with Compose v2 | B (built by Render), D |
+| Docker | Engine 24+ with Compose v2 | C (built by Render), E |
 | Git | any | all |
 
 - **Windows:** [Laravel Herd](https://herd.laravel.com) installs PHP and Composer. Get Node.js from <https://nodejs.org>.
 - **macOS:** `brew install php composer node`
-- **Ubuntu 24.04:** see [§5.1](#51-install-packages).
+- **Ubuntu 24.04:** see [§6.1](#61-install-packages).
 
 ---
 
@@ -85,7 +86,33 @@ Run the scheduler in a second terminal: `php artisan schedule:work`.
 
 ---
 
-## 4. Target B: Render (Docker) + Supabase
+## 4. Target B: Vercel (serverless) + Supabase
+
+Vercel runs Laravel as one serverless PHP function (`api/index.php`, runtime `vercel-php@0.7.4` = PHP 8.3). [`vercel.json`](vercel.json) holds the build, routing and cron settings, so **no build settings need to be changed in the Vercel UI**.
+
+1. **Database first.** Vercel does not run migrations, so complete [§2](#2-create-the-database-supabase) and apply `database/schema.sql` (and optionally `database/seed.sql`) in the Supabase **SQL Editor**.
+2. **Admin account.** From any machine with PHP, put the Supabase `DB_*` values in `.env` and run `php artisan nexora:create-admin you@your-company.com`.
+3. **Import.** <https://vercel.com/new> → *Import Git Repository* → select this repository. Keep *Framework Preset* on **Other**. `vercel.json` sets `"framework": null`, `npm run build` and the `public` output directory.
+4. **Environment Variables** (*Settings → Environment Variables*, Production):
+
+   | Variable | Value |
+   |---|---|
+   | `APP_KEY` | `base64:…` (see [§5](#5-target-c--render-docker--supabase) step 2 for the command) |
+   | `APP_URL` | `https://<project>.vercel.app` |
+   | `DB_HOST` | Supabase session-pooler host |
+   | `DB_USERNAME` | `postgres.<project-ref>` |
+   | `DB_PASSWORD` | Supabase database password |
+   | `CRON_SECRET` | long random string (`openssl rand -hex 32`). Vercel Cron sends it as a Bearer token |
+   | `NEXORA_DEMO_MODE` | `true` for the public demo (one-click buyer sign-in), otherwise `false` |
+
+   Non-secret defaults are applied in `api/index.php`, and any of them can be overridden with an env var. They include `APP_ENV=production`, pgsql on port 5432 with `sslmode=require`, database sessions and cache, stderr logs, `/tmp` view and bootstrap caches, and `NEXORA_UPLOADS_ENABLED=false`.
+5. **Deploy** (or *Redeploy* after changing variables). Vercel Cron calls `GET /cron/expire-quotes` daily at 02:00 UTC.
+
+**Limitations:** product image uploads are disabled because Vercel's disk is not persistent. Use Render, a VPS or Docker if you need them. The first request after an idle period is slower (cold start).
+
+---
+
+## 5. Target C: Render (Docker) + Supabase
 
 Render builds the repository's `Dockerfile` and runs it as a web service. The Blueprint [`render.yaml`](render.yaml) declares the service and every environment variable.
 
@@ -114,9 +141,9 @@ Render builds the repository's `Dockerfile` and runs it as a web service. The Bl
 
 ---
 
-## 5. Target C: VPS (Ubuntu, Nginx + PHP-FPM + systemd)
+## 6. Target D: VPS (Ubuntu, Nginx + PHP-FPM + systemd)
 
-### 5.1 Install packages
+### 6.1 Install packages
 
 ```bash
 sudo apt update
@@ -129,7 +156,7 @@ curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt in
 
 (Ubuntu 22.04 needs `sudo add-apt-repository ppa:ondrej/php` first to get PHP 8.3.)
 
-### 5.2 Deploy the code
+### 6.2 Deploy the code
 
 ```bash
 sudo mkdir -p /var/www/nexora && sudo chown $USER:www-data /var/www/nexora
@@ -146,7 +173,7 @@ php artisan config:cache && php artisan route:cache && php artisan view:cache
 sudo chown -R www-data:www-data storage bootstrap/cache
 ```
 
-### 5.3 Nginx reverse proxy to PHP-FPM
+### 6.3 Nginx reverse proxy to PHP-FPM
 
 `/etc/nginx/sites-available/nexora`:
 
@@ -179,7 +206,7 @@ sudo nginx -t && sudo systemctl reload nginx
 sudo apt install -y certbot python3-certbot-nginx && sudo certbot --nginx -d your-domain.com   # HTTPS
 ```
 
-### 5.4 systemd service for the scheduler
+### 6.4 systemd service for the scheduler
 
 `/etc/systemd/system/nexora-scheduler.service`:
 
@@ -204,7 +231,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now nexora-scheduler php8.3-fpm nginx
 ```
 
-### 5.5 Updating
+### 6.5 Updating
 
 ```bash
 cd /var/www/nexora && git pull
@@ -215,7 +242,7 @@ sudo systemctl reload php8.3-fpm && sudo systemctl restart nexora-scheduler
 
 ---
 
-## 6. Target D: Docker Compose
+## 7. Target E: Docker Compose
 
 ```bash
 cp .env.example .env        # fill APP_KEY, APP_URL and DB_* (Supabase from §2)
@@ -229,14 +256,14 @@ docker compose exec app php artisan nexora:create-admin you@your-company.com
 
 ---
 
-## 7. Admin account
+## 8. Admin account
 
 There is **no default admin and no default password**. Use either:
 
 - `php artisan nexora:create-admin you@company.com`, which reads the password from a hidden prompt (min. 12 chars, mixed case, number, symbol), or
 - `SEED_ADMIN_EMAIL` + `SEED_ADMIN_PASSWORD` in the environment before `php artisan db:seed` (this is how Render does it).
 
-## 8. Branding
+## 9. Branding
 
 | What | Where |
 |---|---|
@@ -249,7 +276,7 @@ There is **no default admin and no default password**. Use either:
 
 Run `npm run build` after any change to CSS or JS.
 
-## 9. Verify
+## 10. Verify
 
 ```bash
 php artisan test                               # feature + unit tests (SQLite in-memory)
@@ -260,12 +287,12 @@ curl -f https://your-domain/up                 # health endpoint
 
 CI (`.github/workflows/ci.yml`) runs all of these on every push. It tests against both SQLite and PostgreSQL 17, and also checks that `schema.sql` + `seed.sql` create the database from empty.
 
-## 10. Production checklist
+## 11. Production checklist
 
 - [ ] `APP_ENV=production`, `APP_DEBUG=false`, HTTPS, `SESSION_SECURE_COOKIE=true`
 - [ ] Strong unique `APP_KEY` and database password. `.env` never committed.
 - [ ] Admin created through `nexora:create-admin` or the env seed (never a shared password)
 - [ ] `NEXORA_DEMO_MODE=false` unless this is the public demo
 - [ ] Real SMTP (`MAIL_*`) so verification e-mails are delivered
-- [ ] Scheduler running (systemd unit, compose `scheduler` service, or `RUN_SCHEDULER=true`)
+- [ ] Scheduler running (systemd unit, compose `scheduler` service, `RUN_SCHEDULER=true`, or Vercel Cron with `CRON_SECRET`)
 - [ ] Database backups enabled (Supabase → Database → Backups)

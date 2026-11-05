@@ -1,8 +1,7 @@
 <?php
 
-use App\Enums\QuoteStatus;
+use App\Actions\ExpireStaleQuotes;
 use App\Enums\UserRole;
-use App\Models\Quote;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -48,15 +47,10 @@ Artisan::command('nexora:create-admin {email?} {--name=Administrator}', function
 /*
 | Expire stale open quotes (pending / under review) older than the configured age.
 */
-Artisan::command('nexora:expire-quotes', function () {
-    $days = (int) config('nexora.quote_expiry_days', 30);
+Artisan::command('nexora:expire-quotes', function (ExpireStaleQuotes $expire) {
+    $count = $expire();
 
-    $count = Quote::query()
-        ->whereIn('status', [QuoteStatus::Pending->value, QuoteStatus::UnderReview->value])
-        ->where('created_at', '<', now()->subDays($days))
-        ->update(['status' => QuoteStatus::Expired->value, 'updated_at' => now()]);
-
-    $this->info("Expired {$count} quote(s) older than {$days} days.");
+    $this->info("Expired {$count} quote(s) older than ".config('nexora.quote_expiry_days').' days.');
 })->purpose('Mark stale open quotes as expired');
 
 Schedule::command('nexora:expire-quotes')->dailyAt('02:00')->withoutOverlapping();

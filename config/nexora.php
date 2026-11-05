@@ -32,6 +32,13 @@ return [
         'reference_prefix' => 'NXQ',
     ],
 
+    // Product image uploads. Disable on hosts without persistent disk (Vercel).
+    'uploads_enabled' => (bool) env('NEXORA_UPLOADS_ENABLED', true),
+
+    // Shared secret for the HTTP cron endpoint (Vercel Cron). Endpoint is
+    // disabled (404) while this is empty. No default on purpose.
+    'cron_secret' => env('CRON_SECRET'),
+
     // Rate limits (requests per minute).
     'rate_limits' => [
         'login' => 5,

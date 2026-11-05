@@ -27,6 +27,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - Idempotent seeders (`DatabaseSeeder`, `UserSeeder`, `ProductSeeder`, `QuoteSeeder`) with no hard-coded passwords.
 - `@money` Blade directive and `App\Support\Money` as the single price-formatting point. All tunables are in `config/nexora.php`.
 - Standalone error pages (403, 404, 419, 429, 500, 503).
+- **Vercel** deployment: `vercel.json` + `api/index.php` (`vercel-php@0.7.4`, PHP 8.3), `/tmp` cache paths, database cache store (`cache` / `cache_locks` tables) for shared rate limits, Vercel Cron endpoint `GET /cron/expire-quotes` (Bearer `CRON_SECRET`), and the `NEXORA_UPLOADS_ENABLED` toggle.
+- `App\Actions\ExpireStaleQuotes`, shared by the console command and the cron endpoint.
 - Multi-stage Dockerfile (PHP 8.3-FPM + Nginx, non-root, builds without secrets), `docker-compose.yml` with mandatory-secret guards and an optional local PostgreSQL profile, and a `render.yaml` Blueprint.
 - GitHub Actions CI: composer lockfile generation and validation, Pint, tests on SQLite **and** PostgreSQL 17, a `schema.sql` + `seed.sql` from-empty check, `composer audit`, `npm audit`, and a Docker build.
 - Documentation: README, HowToSetup (local, Render + Supabase, VPS with Nginx + PHP-FPM + systemd, Docker Compose, branding), AGENTS, CLAUDE, SECURITY, `docs/architecture.md`, `docs/ERD.md`, `docs/authorization-matrix.md`.

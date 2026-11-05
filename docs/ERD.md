@@ -60,6 +60,8 @@ erDiagram
     }
 ```
 
+Framework tables without relationships: `password_reset_tokens`, `cache`, `cache_locks` (database cache store, used for shared rate limits on serverless hosts) and `migrations`.
+
 ## Foreign keys
 
 | Column | References | On delete | Index |

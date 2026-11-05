@@ -18,7 +18,7 @@ return new class extends Migration
 {
     private const TABLES = [
         'users', 'password_reset_tokens', 'sessions',
-        'products', 'bulk_prices', 'quotes', 'migrations',
+        'cache', 'cache_locks', 'products', 'bulk_prices', 'quotes', 'migrations',
     ];
 
     public function up(): void

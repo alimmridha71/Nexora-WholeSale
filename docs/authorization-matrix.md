@@ -18,6 +18,7 @@ Authorization is layered. Each layer works on its own, so a missing middleware s
 | GET | `/quote-status` | quote-status.create | `throttle:60,1` | — |
 | POST | `/quote-status` | quote-status.show | `throttle:60,1`, `throttle:quote-lookup` | random reference **and** owner e-mail, generic error |
 | GET | `/up` | — | — | health check |
+| GET | `/cron/expire-quotes` | cron.expire-quotes | `throttle:10,1` | 404 unless `CRON_SECRET` set; `hash_equals` on `Authorization: Bearer <CRON_SECRET>` (Vercel Cron); idempotent |
 
 ## Guest authentication
 

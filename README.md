@@ -2,7 +2,7 @@
 
 **Nexora Wholesale** is a B2B wholesale ordering platform built on **Laravel 13** and **Supabase PostgreSQL**. Retailers, wholesalers and distributors browse a catalog with **tiered bulk pricing** and send **custom quote requests** for large orders. Administrators manage products, price tiers and the quote pipeline.
 
-**Live demo:** <https://nexora-wholesale.onrender.com>
+**Live demo:** hosted on Vercel (serverless PHP) with Supabase PostgreSQL — URL below once deployed.
 
 On `/login`, click **Try the live demo** to sign in instantly as a sample retailer, wholesaler or distributor. No password is needed, and none is published. Admin access is provided to reviewers privately.
 
@@ -31,7 +31,7 @@ On `/login`, click **Try the live demo** to sign in instantly as a sample retail
 
 ## Tech stack
 
-PHP 8.3+ · Laravel 13 · PostgreSQL 17 (Supabase) · Blade · Tailwind CSS 4 · Vite 7 · Docker (PHP-FPM + Nginx, non-root) · Render
+PHP 8.3+ · Laravel 13 · PostgreSQL 17 (Supabase) · Blade · Tailwind CSS 4 · Vite 7 · Vercel (`vercel-php`) · Docker (PHP-FPM + Nginx, non-root) · Render
 
 Exact dependency versions are pinned in `composer.lock` and `package-lock.json`.
 
@@ -46,13 +46,13 @@ npm ci && npm run build
 php artisan serve
 ```
 
-**[HowToSetup.md](HowToSetup.md)** has the full guide for local, Render + Supabase, VPS (Nginx + PHP-FPM + systemd) and Docker Compose, plus the branding guide.
+**[HowToSetup.md](HowToSetup.md)** has the full guide for local, Vercel + Supabase, Render + Supabase, VPS (Nginx + PHP-FPM + systemd) and Docker Compose, plus the branding guide.
 
 ## Documentation
 
 | File | Contents |
 |---|---|
-| [HowToSetup.md](HowToSetup.md) | Prerequisites and step-by-step setup for four targets |
+| [HowToSetup.md](HowToSetup.md) | Prerequisites and step-by-step setup for five targets |
 | [AGENTS.md](AGENTS.md) | Architecture, security rules and conventions for maintainers and AI agents |
 | [docs/architecture.md](docs/architecture.md) | Layers, request lifecycle, deployment topologies |
 | [docs/ERD.md](docs/ERD.md) | Entity-relationship diagram, FKs, RLS |

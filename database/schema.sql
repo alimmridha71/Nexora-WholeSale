@@ -62,6 +62,23 @@ CREATE INDEX sessions_user_id_index ON sessions (user_id);
 CREATE INDEX sessions_last_activity_index ON sessions (last_activity);
 
 -- ---------------------------------------------------------------------
+-- cache (database cache store; shared rate limits on serverless hosts)
+-- ---------------------------------------------------------------------
+CREATE TABLE cache (
+    key        varchar(255) PRIMARY KEY,
+    value      text NOT NULL,
+    expiration integer NOT NULL
+);
+CREATE INDEX cache_expiration_index ON cache (expiration);
+
+CREATE TABLE cache_locks (
+    key        varchar(255) PRIMARY KEY,
+    owner      varchar(255) NOT NULL,
+    expiration integer NOT NULL
+);
+CREATE INDEX cache_locks_expiration_index ON cache_locks (expiration);
+
+-- ---------------------------------------------------------------------
 -- products
 -- ---------------------------------------------------------------------
 CREATE TABLE products (
@@ -125,6 +142,8 @@ ALTER TABLE migrations            ENABLE ROW LEVEL SECURITY;
 ALTER TABLE users                 ENABLE ROW LEVEL SECURITY;
 ALTER TABLE password_reset_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sessions              ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cache                 ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cache_locks           ENABLE ROW LEVEL SECURITY;
 ALTER TABLE products              ENABLE ROW LEVEL SECURITY;
 ALTER TABLE bulk_prices           ENABLE ROW LEVEL SECURITY;
 ALTER TABLE quotes                ENABLE ROW LEVEL SECURITY;
@@ -146,6 +165,7 @@ $$;
 -- Mark the Laravel migrations as applied.
 INSERT INTO migrations (migration, batch) VALUES
     ('0001_01_01_000000_create_users_table', 1),
+    ('0001_01_01_000001_create_cache_table', 1),
     ('2026_11_04_000001_create_products_table', 1),
     ('2026_11_04_000002_create_bulk_prices_table', 1),
     ('2026_11_04_000003_create_quotes_table', 1),

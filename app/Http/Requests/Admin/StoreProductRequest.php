@@ -28,7 +28,9 @@ class StoreProductRequest extends FormRequest
             'description' => ['nullable', 'string', 'max:10000'],
             'base_price' => ['required', 'decimal:0,2', 'min:0.01', 'max:9999999999.99'],
             'stock' => ['required', 'integer', 'min:0', 'max:2147483647'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048', 'dimensions:max_width=4000,max_height=4000'],
+            'image' => config('nexora.uploads_enabled')
+                ? ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048', 'dimensions:max_width=4000,max_height=4000']
+                : ['prohibited'],
         ];
     }
 }

@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+node_modules
+tests
+.github
+docker
+Dockerfile
+docker-compose.yml
+render.yaml
+storage/logs/*
+*.zip

@@ -35,6 +35,11 @@ Route::middleware('throttle:60,1')->group(function () {
         ->name('quote-status.show');
 });
 
+// ---- Scheduled jobs for serverless hosts (Bearer CRON_SECRET) -----------
+Route::get('/cron/expire-quotes', [CronController::class, 'expireQuotes'])
+    ->middleware('throttle:10,1')
+    ->name('cron.expire-quotes');
+
 // ---- Guest authentication -------------------------------------------------
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'create'])->name('login');
